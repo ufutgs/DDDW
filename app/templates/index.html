@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+
+<h1 class="display-1">Welcome to the Club</h1>
+<a>Input your value: </a>
+	<ul>
+		<a>GDP</a><br><input id="1">
+	</ul>
+	<ul>
+		<a>Human Delevopment Index</a><br><input id="2">
+	</ul>
+	<ul>
+		<a>Total Deaths</a><br><input id="3">
+	</ul>
+	<ul>
+		<a>No. of population Aged 65 or older</a><br><input id="4">
+	</ul>
+	<button type="button" onclick="myFunction()">Submit</button>
+	<p id="demo"></p>
+	<h4 class="display-6" id="predict" ></h4>
+</p>
+<script>
+	
+	var beta = {{beta}};
+	var max = {{maxi}};
+	var min = {{mini}};
+	function normalize(array)
+	{
+		var returnvalue = [];
+		for(i=0;i<array.length;i++){
+			realmax = (array[i]>max[i])?array[i]:max[i]
+			realmin = (array[i]<min[i])?array[i]:min[i]
+			returnvalue.push((array[i]-realmin)/(realmax-realmin))
+		}
+		return returnvalue;
+	}
+	function myFunction(){
+		var array =[];
+	for (var i =1; i<5;i++)
+	{
+		 array.push(parseFloat(document.getElementById(String(i)).value))
+	}
+  let text;
+  if (array.includes(NaN)) {
+    text = "Input not valid";
+	document.getElementById("demo").innerHTML = text;
+	return
+  }
+  var x = beta[0]
+  var norm = normalize(array)
+  for(var i =0;i<array.length;i++)
+  {
+	x += norm[i]*beta[i+1]
+  }
+  document.getElementById("predict").innerHTML = "There is "+String(x*100)+"% of population are vaccinated";
+	}
+  </script>
+{% endblock %}
